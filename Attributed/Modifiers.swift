@@ -86,11 +86,22 @@ public enum Modifiers {
     public static func para(_ context: NSAttributedString, _ attributedString: NSAttributedString) -> NSAttributedString {
         guard let result = attributedString.mutableCopy() as? NSMutableAttributedString else { return attributedString }
 
-        result.insert(NSAttributedString(string: "\n", attributes: context.attributes(at: context.length - 1, effectiveRange: nil)), at: attributedString.length)
+        let stringToInsert: NSAttributedString = {
+            if context.length == 0 {
+                return NSAttributedString(string: "\n")
+            } else {
+                return NSAttributedString(string: "\n", attributes: context.attributes(at: context.length - 1, effectiveRange: nil))
+            }
+        }()
+        
+        result.insert(stringToInsert, at: attributedString.length)
         return result
     }
 
     public static func lineBreak(_ context: NSAttributedString, attributedString: NSAttributedString) -> NSAttributedString {
+        guard context.length > 0 else {
+            return NSAttributedString(string: "\n")
+        }
         return NSAttributedString(string: "\n", attributes: context.attributes(at: context.length - 1, effectiveRange: nil))
     }
 
